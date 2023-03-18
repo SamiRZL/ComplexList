@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -32,7 +34,79 @@ public class MainActivity extends AppCompatActivity {
     private EditText addTextItem;
     private Button addButton;
 
+    private MyAdapter adapter;
+
+
+
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        AlertDialog.Builder builder;
+        if (item.getItemId() == R.id.addList) {
+            // Show dialog to add a new list
+            builder = new AlertDialog.Builder(this);
+            builder.setTitle("New List");
+            final EditText input = new EditText(this);
+            input.setHint("Enter list name");
+            builder.setView(input);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String listName = input.getText().toString().trim();
+                    if (!TextUtils.isEmpty(listName)) {
+                        // Create new list and add it to the list of lists
+                        ArrayList<String> newList = new ArrayList<>();
+                        listAchats.add(listName);
+                        // Update adapter with new list
+                        MyAdapter adapter = new MyAdapter(MainActivity.this, newList);
+                        ListView listAchatsView = findViewById(R.id.listAchatView);
+                        listAchatsView.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Please enter a list name", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        } else if (item.getItemId() == R.id.emptyList) {
+            // Show dialog to confirm deleting the list
+            builder = new AlertDialog.Builder(this);
+            builder.setTitle("Delete List");
+            builder.setMessage("Are you sure you want to delete the entire list?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Clear the shopping list
+                    listAchats.clear();
+                    // Notify the adapter that the data set has changed
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(MainActivity.this, "Shopping list emptied", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        }
+        return true;
+    }
+
+
+
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -160,6 +234,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+
+
     }}
-
-

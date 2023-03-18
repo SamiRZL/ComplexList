@@ -1,0 +1,17 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/addList"
+        android:icon="@drawable/baseline_note_add"
+        android:title="Item 1"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/emptyList"
+        android:icon="@drawable/close"
+        android:title="Item 2"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/about"
+        android:title="Item 3"
+        app:showAsAction="never" />
+</menu>
